@@ -7,7 +7,7 @@
 Array Array_Init_(size_t capacity, size_t item_size, Allocator* alloc)
 {
     return (Array) {
-        .data = Acquire(void, capacity * item_size, alloc),
+        .data = Acquire(char, capacity * item_size, alloc),
         .capacity = capacity,
         .item_size = item_size,
         .size = 0,
@@ -31,8 +31,8 @@ void Array_Reserve(Array* array, size_t new_size, Allocator* alloc)
     }
 
     // Copy the current array data into a new buffer.
-    void* resizedbuf = Acquire(void, new_size, alloc);
-    memcpy(resizedbuf, array->data, array->size);
+    void* resizedbuf = Acquire(char, new_size * array->item_size, alloc);
+    memcpy(resizedbuf, array->data, array->size * array->item_size);
 
     // Delete the old buffer.
     Release(array->data, alloc);
@@ -52,7 +52,8 @@ void Array_Append(Array* array, void* data, Allocator* alloc)
     size_t remaining = array->item_size * (array->capacity - array->size);
     if (array->item_size > remaining) {
         // Not enough current space so double the capacity.
-        Array_Reserve(array, array->capacity * 2, alloc);
+        size_t new_size = (array->capacity > 0) ? array->capacity * 2 : 1;
+        Array_Reserve(array, new_size, alloc);
     }
 
     // Copy data into the array.

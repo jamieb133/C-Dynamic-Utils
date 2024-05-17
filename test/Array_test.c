@@ -8,6 +8,7 @@ static Allocator alloc_;
 
 TEST_SETUP(Array)
 {
+    printf("Starting Array test\n");
     alloc_ = Default_Allocator();
 }
 
@@ -50,6 +51,8 @@ TEST(Array, InsertValues)
         int val = Array_Peek(int, &array, i);
         TEST_ASSERT_EQUAL(i, val);
     }
+
+    Array_Deinit(&array, &alloc_);
 }
 
 TEST(Array, AppendValues)
@@ -66,5 +69,7 @@ TEST(Array, AppendValues)
         int val = Array_Peek(int, &array, i);
         TEST_ASSERT_EQUAL(i, val);
     }
+
+    Array_Deinit(&array, &alloc_);
 }
 
