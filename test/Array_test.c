@@ -1,4 +1,3 @@
-#include "unity.h"
 #include <unity_fixture.h>
 #include <dynautils/Allocators.h>
 #include <dynautils/Array.h>
@@ -21,6 +20,7 @@ TEST_GROUP_RUNNER(Array)
 {
     RUN_TEST_CASE(Array, Init);
     RUN_TEST_CASE(Array, InsertValues);
+    RUN_TEST_CASE(Array, AppendValues);
 }
 
 TEST(Array, Init)
@@ -52,5 +52,19 @@ TEST(Array, InsertValues)
     }
 }
 
+TEST(Array, AppendValues)
+{
+    size_t n = 100;
+    // Initialise with no capacity, Append should resize the array as needed.
+    Array array = Array_Init(int, 0, &alloc_);
 
+    for (int i = 0; i < n; i++) {
+        Array_Append(&array, (void*)&i, &alloc_);
+    }
+
+    for (int i = 0; i < n; i++) {
+        int val = Array_Peek(int, &array, i);
+        TEST_ASSERT_EQUAL(i, val);
+    }
+}
 

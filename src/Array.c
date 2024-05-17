@@ -1,3 +1,5 @@
+#include <signal.h>
+#include <stdio.h>
 #include <string.h>
 #include <dynautils/Allocators.h>
 #include <dynautils/Array.h>
@@ -21,6 +23,24 @@ void Array_Deinit(Array* array, Allocator* alloc)
     array->item_size = 0;
 }
 
+void Array_Reserve(Array* array, size_t new_size, Allocator* alloc)
+{
+    // New logical size if it's shrinking.
+    if (new_size < array->size) {
+        array->size = new_size;
+    }
+
+    // Copy the current array data into a new buffer.
+    void* resizedbuf = Acquire(void, new_size, alloc);
+    memcpy(resizedbuf, array->data, array->size);
+
+    // Delete the old buffer.
+    Release(array->data, alloc);
+
+    array->capacity = new_size;
+    array->data = resizedbuf;
+}
+
 void Array_Insert(Array* array, size_t index, void* data)
 {
     void* insert_loc = (char*)array->data + (array->item_size * index);
@@ -31,14 +51,8 @@ void Array_Append(Array* array, void* data, Allocator* alloc)
 {
     size_t remaining = array->item_size * (array->capacity - array->size);
     if (array->item_size > remaining) {
-        // Resize array by doubling the capacity.
-        array->capacity *= 2;
-        void* resizedbuf = Acquire(void, array->capacity * array->size, alloc);
-        memcpy(resizedbuf, array->data, array->size * array->item_size);
-
-        // Delete the old buffer.
-        Release(array->data, alloc);
-        array->data = resizedbuf;
+        // Not enough current space so double the capacity.
+        Array_Reserve(array, array->capacity * 2, alloc);
     }
 
     // Copy data into the array.
