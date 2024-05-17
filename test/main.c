@@ -3,6 +3,7 @@
 static void RunAllTests()
 {
     RUN_TEST_GROUP(Array);    
+    RUN_TEST_GROUP(String);    
 }
 
 int main() 
