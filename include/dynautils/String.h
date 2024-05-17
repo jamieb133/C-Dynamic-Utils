@@ -21,4 +21,5 @@ String String_Concat_(Allocator* alloc, .../*String*/);
 Array String_Split(String* string, char* delim, Allocator* alloc);
 // Check if two strings are equal.
 bool String_Equals(String* string, char* cstring);
-
+// Deallocate substrings.
+void String_Deinit_Substrings(Array* substrings, Allocator* alloc);

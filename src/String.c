@@ -37,6 +37,15 @@ void String_Deinit(String* string, Allocator* alloc)
     string->strlen = 0;
 }
 
+
+void String_Deinit_Substrings(Array* substrings, Allocator* alloc)
+{
+    for (int i = 0; i < substrings->size; i++) {
+        String* substring = &((String*)substrings->data)[i];
+        String_Deinit(substring, alloc);
+    }
+}
+
 String String_Concat_(Allocator* alloc, .../*String*/)
 {
     va_list args;
