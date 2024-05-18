@@ -1,3 +1,4 @@
+#include <unity.h>
 #include <unity_fixture.h>
 #include <dynautils/Allocators.h>
 #include <dynautils/Array.h>

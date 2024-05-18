@@ -10,6 +10,6 @@ FetchContent_MakeAvailable(unity)
 
 # Add unit tests.
 file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/*.c)
-add_executable(${CMAKE_PROJECT_NAME}_Tests ${SOURCES})
-target_link_libraries(${CMAKE_PROJECT_NAME}_Tests PUBLIC ${CMAKE_PROJECT_NAME} unity)
+add_executable(dynautils_Tests ${SOURCES})
+target_link_libraries(dynautils_Tests PUBLIC dynautils unity)
 
